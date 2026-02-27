@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EduThumb Pro — Advanced Educational Thumbnail Studio</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Syne:wght@400;500;600;700;800&family=Poppins:ital,wght@0,400;0,600;0,700;0,800;1,400&family=Playfair+Display:ital,wght@0,700;0,800;1,700&family=Rajdhani:wght@500;600;700&family=Noto+Serif+Bengali:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="app">
+
+  <!-- HEADER -->
+  <header class="app-header">
+    <div class="logo">
+      <div class="logo-icon">🎓</div>
+      <div>
+        <h1>EduThumb <span>PRO</span></h1>
+        <div style="font-size:0.72em; color:var(--text3); margin-top:1px;">Advanced Educational Thumbnail Studio</div>
+      </div>
+    </div>
+    <div class="header-stats">
+      <div class="stat"><div class="stat-num" id="stat-generated">0</div><div class="stat-label">Generated</div></div>
+      <div class="stat"><div class="stat-num" id="stat-downloaded">0</div><div class="stat-label">Downloaded</div></div>
+      <div class="stat"><div class="stat-num" id="stat-session">0</div><div class="stat-label">Session</div></div>
+    </div>
+  </header>
+
+  <div class="main-layout">
+
+    <!-- ===== SIDEBAR ===== -->
+    <div class="sidebar-wrap">
+    <aside class="sidebar">
+
+      <!-- Text Input -->
+      <div class="panel open" id="panel-text">
+        <div class="panel-header" onclick="togglePanel('panel-text')">
+          <div class="panel-title"><span class="icon">✏️</span> Content</div>
+          <span class="panel-toggle">▼</span>
+        </div>
+        <div class="panel-body">
+          <div class="field">
+            <label>Thumbnail Texts <span>(one per line)</span></label>
+            <textarea id="text-input" rows="5" placeholder="e.g.&#10;Rajshahi University A Unit 2024&#10;The Periodic Table Explained&#10;10 Math Tricks You Must Know"></textarea>
+          </div>
+          <div class="field">
+            <label>Subtitle / Subtext <span>(optional)</span></label>
+            <input type="text" id="subtitle-input" placeholder="e.g. Full Study Guide | Free PDF">
+          </div>
+          <div class="field">
+            <label>Tag / Label Badge</label>
+            <select id="badge-select" onchange="handleBadgeSelect(this.value)">
+              <option value="">— None —</option>
+              <optgroup label="Status">
+                <option value="NEW">🆕 NEW</option>
+                <option value="HOT">🔥 HOT</option>
+                <option value="FREE">🎁 FREE</option>
+                <option value="TRENDING">📈 TRENDING</option>
+                <option value="UPDATED">✅ UPDATED</option>
+              </optgroup>
+              <optgroup label="Year">
+                <option value="2024">📅 2024</option>
+                <option value="2025">📅 2025</option>
+                <option value="2023-24">📅 2023-24</option>
+                <option value="2024-25">📅 2024-25</option>
+              </optgroup>
+              <optgroup label="Content Type">
+                <option value="PDF">📄 PDF</option>
+                <option value="VIDEO">▶ VIDEO</option>
+                <option value="EXAM">📝 EXAM</option>
+                <option value="QUESTION">❓ QUESTION</option>
+                <option value="SYLLABUS">📋 SYLLABUS</option>
+                <option value="RESULT">🏆 RESULT</option>
+                <option value="SUGGESTION">💡 SUGGESTION</option>
+                <option value="ROUTINE">📅 ROUTINE</option>
+                <option value="NOTICE">📢 NOTICE</option>
+                <option value="ADMIT CARD">🪪 ADMIT CARD</option>
+                <option value="FULL MARKS">💯 FULL MARKS</option>
+              </optgroup>
+              <optgroup label="Job Prep">
+                <option value="BCS">🏛 BCS</option>
+                <option value="BANK">🏦 BANK JOB</option>
+                <option value="GOVT JOB">📋 GOVT JOB</option>
+                <option value="IELTS">🌐 IELTS</option>
+                <option value="SCHOLARSHIP">🎖 SCHOLARSHIP</option>
+              </optgroup>
+            </select>
+            <!-- Hidden chips for state compat -->
+            <div class="chip-group" id="badge-chips" style="display:none">
+              <div class="chip active" data-val="NEW">NEW</div>
+            </div>
+          </div>
+          <div class="btn-group">
+            <button class="btn btn-secondary" onclick="loadSamples()">📋 Load Samples</button>
+            <button class="btn btn-secondary" onclick="clearText()">🗑 Clear</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Template -->
+      <div class="panel open" id="panel-template">
+        <div class="panel-header" onclick="togglePanel('panel-template')">
+          <div class="panel-title"><span class="icon">🖼</span> Layout Template</div>
+          <span class="panel-toggle">▼</span>
+        </div>
+        <div class="panel-body">
+          <div class="template-grid" id="template-grid"></div>
+          <div class="field" style="margin-top:4px;">
+            <label>Aspect Ratio</label>
+            <div class="chip-group" id="aspect-chips">
+              <div class="chip active" data-val="16:9">16:9</div>
+              <div class="chip" data-val="4:3">4:3</div>
+              <div class="chip" data-val="1:1">1:1</div>
+              <div class="chip" data-val="9:16">9:16</div>
+              <div class="chip" data-val="21:9">21:9</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Background -->
+      <div class="panel open" id="panel-bg">
+        <div class="panel-header" onclick="togglePanel('panel-bg')">
+          <div class="panel-title"><span class="icon">🎨</span> Background</div>
+          <span class="panel-toggle">▼</span>
+        </div>
+        <div class="panel-body">
+          <div class="field">
+            <label>Background Type</label>
+            <div class="chip-group" id="bg-type-chips">
+              <div class="chip active" data-val="gradient">Gradient</div>
+              <div class="chip" data-val="mesh">Mesh</div>
+              <div class="chip" data-val="pattern">Pattern</div>
+              <div class="chip" data-val="solid">Solid</div>
+            </div>
+          </div>
+          <div class="field" id="gradient-dir-field">
+            <label>Direction</label>
+            <div class="chip-group" id="dir-chips">
+              <div class="chip active" data-val="to right">→</div>
+              <div class="chip" data-val="to bottom">↓</div>
+              <div class="chip" data-val="to bottom right">↘</div>
+              <div class="chip" data-val="to top right">↗</div>
+              <div class="chip" data-val="circle">⊙</div>
+            </div>
+          </div>
+          <div class="field" id="pattern-type-field" style="display:none">
+            <label>Pattern Type</label>
+            <div class="chip-group" id="pattern-chips">
+              <div class="chip active" data-val="dots">Dots</div>
+              <div class="chip" data-val="lines">Lines</div>
+              <div class="chip" data-val="grid">Grid</div>
+              <div class="chip" data-val="zigzag">Zigzag</div>
+              <div class="chip" data-val="diamonds">Diamonds</div>
+            </div>
+          </div>
+          <div class="field">
+            <label>Color Presets</label>
+            <div class="palette-grid" id="palette-grid"></div>
+          </div>
+          <div class="field">
+            <label>Custom Colors</label>
+            <div class="color-row">
+              <div class="color-field" onclick="document.getElementById('color1').click()">
+                <input type="color" id="color1" value="#7c3aed" oninput="updateColorHex('color1')">
+                <span class="color-hex" id="color1-hex">#7c3aed</span>
+                <span style="font-size:0.7em;color:var(--text3)">Color 1</span>
+              </div>
+              <div class="color-field" onclick="document.getElementById('color2').click()">
+                <input type="color" id="color2" value="#db2777" oninput="updateColorHex('color2')">
+                <span class="color-hex" id="color2-hex">#db2777</span>
+                <span style="font-size:0.7em;color:var(--text3)">Color 2</span>
+              </div>
+            </div>
+          </div>
+          <div class="toggle-row">
+            <span class="toggle-label">🎲 Random per thumbnail</span>
+            <label class="toggle"><input type="checkbox" id="random-each" checked><span class="toggle-track"></span></label>
+          </div>
+          <div class="toggle-row">
+            <span class="toggle-label">✨ Noise texture overlay</span>
+            <label class="toggle"><input type="checkbox" id="noise-overlay" checked><span class="toggle-track"></span></label>
+          </div>
+          <div class="toggle-row">
+            <span class="toggle-label">💫 Particle sparkles</span>
+            <label class="toggle"><input type="checkbox" id="sparkles"><span class="toggle-track"></span></label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Typography -->
+      <div class="panel open" id="panel-type">
+        <div class="panel-header" onclick="togglePanel('panel-type')">
+          <div class="panel-title"><span class="icon">Aa</span> Typography</div>
+          <span class="panel-toggle">▼</span>
+        </div>
+        <div class="panel-body">
+          <div class="field">
+            <label>Font Family</label>
+            <select id="font-family">
+              <option value="'Poppins', sans-serif">Poppins — Modern Bold</option>
+              <option value="'Playfair Display', serif">Playfair Display — Editorial</option>
+              <option value="'Rajdhani', sans-serif">Rajdhani — Technical</option>
+              <option value="'Syne', sans-serif">Syne — Contemporary</option>
+              <option value="'Georgia', serif">Georgia — Academic</option>
+              <option value="'Courier New', monospace">Courier New — Code/Retro</option>
+              <option value="'Noto Serif Bengali', serif">Noto Serif Bengali — বাংলা</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Text Effect</label>
+            <div class="chip-group" id="text-effect-chips">
+              <div class="chip active" data-val="shadow">Shadow</div>
+              <div class="chip" data-val="glow">Glow</div>
+              <div class="chip" data-val="outline">Outline</div>
+              <div class="chip" data-val="3d">3D</div>
+              <div class="chip" data-val="gradient">Gradient</div>
+              <div class="chip" data-val="none">None</div>
+            </div>
+          </div>
+          <div class="field">
+            <label>Text Align</label>
+            <div class="chip-group" id="align-chips">
+              <div class="chip" data-val="left">← Left</div>
+              <div class="chip active" data-val="center">Center</div>
+              <div class="chip" data-val="right">Right →</div>
+            </div>
+          </div>
+          <div class="field">
+            <label>Font Size <span id="font-size-val">64px</span></label>
+            <div class="range-wrap">
+              <input type="range" id="font-size" min="20" max="140" value="64" oninput="updateRange(this,'font-size-val','px')">
+              <span class="range-val" id="font-size-disp">64</span>
+            </div>
+          </div>
+          <div class="field">
+            <label>Text Color</label>
+            <div class="color-field" onclick="document.getElementById('text-color').click()">
+              <input type="color" id="text-color" value="#ffffff" oninput="updateColorHex('text-color')">
+              <span class="color-hex" id="text-color-hex">#ffffff</span>
+              <span style="font-size:0.7em;color:var(--text3)">Main text</span>
+            </div>
+          </div>
+          <div class="field">
+            <label>Line Height <span id="line-height-val">1.25</span></label>
+            <div class="range-wrap">
+              <input type="range" id="line-height" min="1" max="2" step="0.05" value="1.25" oninput="updateRange(this,'line-height-val','')">
+              <span class="range-val" id="line-height-disp">1.25</span>
+            </div>
+          </div>
+          <div class="toggle-row">
+            <span class="toggle-label">🔠 UPPERCASE text</span>
+            <label class="toggle"><input type="checkbox" id="uppercase-text"><span class="toggle-track"></span></label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Overlays & Effects -->
+      <div class="panel" id="panel-effects">
+        <div class="panel-header" onclick="togglePanel('panel-effects')">
+          <div class="panel-title"><span class="icon">✨</span> Overlays & Effects</div>
+          <span class="panel-toggle">▼</span>
+        </div>
+        <div class="panel-body">
+          <div class="field">
+            <label>Subject / Category</label>
+            <select id="icon-cat-select" onchange="handleSelectChange('icon-cat-chips', this.value)">
+              <optgroup label="📚 Core Education">
+                <option value="general">📚 General Education</option>
+                <option value="math">📐 Mathematics</option>
+                <option value="science">🔬 Science (General)</option>
+                <option value="physics">⚡ Physics</option>
+                <option value="chemistry">🧪 Chemistry</option>
+                <option value="biology">🧬 Biology</option>
+                <option value="language">🔤 Language &amp; Literature</option>
+                <option value="history">🏛 History &amp; Civics</option>
+                <option value="geography">🌍 Geography</option>
+                <option value="tech">💻 Computer &amp; ICT</option>
+                <option value="engineering">⚙️ Engineering</option>
+                <option value="arts">🎨 Arts &amp; Design</option>
+                <option value="music">🎵 Music</option>
+                <option value="sports">⚽ Sports &amp; PE</option>
+                <option value="religious">📿 Religious Studies</option>
+              </optgroup>
+              <optgroup label="🎓 Higher Education">
+                <option value="medical">🏥 Medical &amp; MBBS</option>
+                <option value="dental">🦷 Dental</option>
+                <option value="nursing">💉 Nursing</option>
+                <option value="pharmacy">💊 Pharmacy</option>
+                <option value="law">⚖️ Law &amp; LLB</option>
+                <option value="business">📊 Business &amp; BBA</option>
+                <option value="economics">💹 Economics</option>
+                <option value="finance">💰 Finance &amp; Banking</option>
+                <option value="accounting">🧾 Accounting</option>
+                <option value="psychology">🧠 Psychology</option>
+                <option value="sociology">👥 Sociology</option>
+                <option value="journalism">📰 Journalism &amp; Media</option>
+                <option value="architecture">🏗 Architecture</option>
+                <option value="agriculture">🌾 Agriculture</option>
+                <option value="marine">🚢 Marine Science</option>
+                <option value="textile">🧵 Textile &amp; Fashion</option>
+              </optgroup>
+              <optgroup label="💼 Job Preparation">
+                <option value="bcs">🏛 BCS &amp; Civil Service</option>
+                <option value="bank-job">🏦 Bank Job Prep</option>
+                <option value="govt-job">📋 Govt Job Exam</option>
+                <option value="police">🚔 Police &amp; Defense</option>
+                <option value="teacher">👨‍🏫 Teacher Registration</option>
+                <option value="ngo">🌱 NGO &amp; Development</option>
+                <option value="it-job">💻 IT &amp; Software Job</option>
+                <option value="freelance">💸 Freelancing</option>
+                <option value="interview">🤝 Interview Tips</option>
+                <option value="cv">📄 CV &amp; Resume</option>
+                <option value="ielts">🌐 IELTS &amp; Language Test</option>
+                <option value="gre">📝 GRE / SAT / GMAT</option>
+                <option value="scholarship">🎖 Scholarship</option>
+                <option value="startup">🚀 Startup &amp; Entrepreneurship</option>
+              </optgroup>
+              <optgroup label="🏫 Exam Specific">
+                <option value="admission">🎓 Admission Test</option>
+                <option value="ssc">📘 SSC / O-Level</option>
+                <option value="hsc">📗 HSC / A-Level</option>
+                <option value="university">🏛 University Exam</option>
+                <option value="question">❓ Question Paper</option>
+                <option value="suggestion">💡 Suggestion</option>
+                <option value="routine">📅 Exam Routine</option>
+                <option value="result">🏆 Result</option>
+              </optgroup>
+            </select>
+          </div>
+          <!-- Hidden chip group to maintain state compatibility -->
+          <div class="chip-group" id="icon-cat-chips" style="display:none">
+            <div class="chip active" data-val="general">general</div>
+          </div>
+          <div class="toggle-row">
+            <span class="toggle-label">🎯 Show floating icons</span>
+            <label class="toggle"><input type="checkbox" id="show-icons" checked><span class="toggle-track"></span></label>
+          </div>
+          <div class="toggle-row">
+            <span class="toggle-label">➕ Math/formula patterns</span>
+            <label class="toggle"><input type="checkbox" id="show-formulas"><span class="toggle-track"></span></label>
+          </div>
+          <div class="toggle-row">
+            <span class="toggle-label">🔷 Geometric shapes</span>
+            <label class="toggle"><input type="checkbox" id="show-geo" checked><span class="toggle-track"></span></label>
+          </div>
+          <div class="toggle-row">
+            <span class="toggle-label">📊 Progress bar element</span>
+            <label class="toggle"><input type="checkbox" id="show-progress"><span class="toggle-track"></span></label>
+          </div>
+          <div class="field">
+            <label>Vignette Strength <span id="vignette-val">40%</span></label>
+            <div class="range-wrap">
+              <input type="range" id="vignette" min="0" max="100" value="40" oninput="updateRange(this,'vignette-val','%')">
+              <span class="range-val" id="vignette-disp">40</span>
+            </div>
+          </div>
+          <div class="field">
+            <label>Overlay Opacity <span id="overlay-val">0%</span></label>
+            <div class="range-wrap">
+              <input type="range" id="overlay-opacity" min="0" max="70" value="0" oninput="updateRange(this,'overlay-val','%')">
+              <span class="range-val" id="overlay-disp">0</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Branding -->
+      <div class="panel" id="panel-brand">
+        <div class="panel-header" onclick="togglePanel('panel-brand')">
+          <div class="panel-title"><span class="icon">🏷</span> Branding</div>
+          <span class="panel-toggle">▼</span>
+        </div>
+        <div class="panel-body">
+          <div class="field">
+            <label>Watermark Text</label>
+            <input type="text" id="watermark-text" placeholder="e.g. @YourChannel">
+          </div>
+          <div class="field">
+            <label>Watermark Position</label>
+            <div class="chip-group" id="watermark-pos-chips">
+              <div class="chip" data-val="top-left">↖</div>
+              <div class="chip" data-val="top-right">↗</div>
+              <div class="chip active" data-val="bottom-right">↘</div>
+              <div class="chip" data-val="bottom-left">↙</div>
+              <div class="chip" data-val="center">⊙</div>
+            </div>
+          </div>
+          <div class="toggle-row">
+            <span class="toggle-label">🔗 Show website URL bar</span>
+            <label class="toggle"><input type="checkbox" id="show-url"><span class="toggle-track"></span></label>
+          </div>
+          <div class="field" id="url-field" style="display:none">
+            <label>Website URL</label>
+            <input type="text" id="url-text" placeholder="www.yoursite.com">
+          </div>
+          <div class="toggle-row">
+            <span class="toggle-label">📌 Channel icon placeholder</span>
+            <label class="toggle"><input type="checkbox" id="show-channel"><span class="toggle-track"></span></label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Export -->
+      <div class="panel open" id="panel-export">
+        <div class="panel-header" onclick="togglePanel('panel-export')">
+          <div class="panel-title"><span class="icon">📤</span> Export</div>
+          <span class="panel-toggle">▼</span>
+        </div>
+        <div class="panel-body">
+          <div class="field">
+            <label>Format</label>
+            <div class="chip-group" id="format-chips">
+              <div class="chip active" data-val="image/jpeg">JPEG</div>
+              <div class="chip" data-val="image/png">PNG</div>
+              <div class="chip" data-val="image/webp">WebP</div>
+            </div>
+          </div>
+          <div class="field">
+            <label>Quality <span id="quality-val">85%</span></label>
+            <div class="range-wrap">
+              <input type="range" id="quality" min="10" max="100" value="85" oninput="updateRange(this,'quality-val','%')">
+              <span class="range-val" id="quality-disp">85</span>
+            </div>
+          </div>
+          <div class="info-row">
+            <span class="info-label">Target size</span>
+            <span class="info-value">50–120 KB</span>
+          </div>
+          <div class="divider"></div>
+          <button class="generate-btn" id="generate-btn" onclick="generateThumbnails()">
+            ✨ Generate Thumbnails
+          </button>
+          <div class="progress-bar" id="gen-progress" style="display:none">
+            <div class="progress-fill" id="gen-progress-fill" style="width:0%"></div>
+          </div>
+          <div class="btn-group" style="margin-top:4px">
+            <button class="btn btn-secondary" id="dl-all-btn" disabled onclick="downloadAllZip()">📦 Download ZIP</button>
+            <button class="btn btn-danger" onclick="clearAll()">🗑 Clear All</button>
+          </div>
+        </div>
+      </div>
+
+    </aside>
+    </div><!-- /.sidebar-wrap -->
+
+    <!-- ===== MAIN CANVAS AREA ===== -->
+    <div class="canvas-area">
+
+      <!-- Live Preview -->
+      <div class="preview-section">
+        <div class="preview-header">
+          <div class="preview-title">
+            🖼 Live Preview
+            <span class="live-badge">LIVE</span>
+          </div>
+          <div style="display:flex;gap:8px;">
+            <button class="btn btn-secondary" onclick="randomizeGradient()" style="padding:6px 14px;font-size:0.78em">🎲 Randomize</button>
+            <button class="btn btn-secondary" onclick="downloadPreview()" style="padding:6px 14px;font-size:0.78em">📥 Save Preview</button>
+          </div>
+        </div>
+        <div class="preview-body">
+          <canvas id="live-canvas"></canvas>
+        </div>
+      </div>
+
+      <!-- Results -->
+      <div class="panel" id="results-panel">
+        <div class="results-header">
+          <div class="results-title">Generated Thumbnails</div>
+          <span class="results-count" id="results-count">0</span>
+        </div>
+        <div id="thumbnails-grid">
+          <div class="empty-state">
+            <div class="empty-icon">🎨</div>
+            <div class="empty-text">No thumbnails yet</div>
+            <div class="empty-sub">Enter your texts and click Generate</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div class="mobile-generate-bar" id="mobile-bar">
+  <button class="btn btn-secondary" onclick="scrollToResults()">📋 Results</button>
+  <button class="generate-btn" onclick="generateThumbnails()">✨ Generate</button>
+  <button class="btn btn-secondary" id="mobile-dl-btn" disabled onclick="downloadAllZip()">📦</button>
+</div>
+
+<div class="toast-container" id="toast-container"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>
